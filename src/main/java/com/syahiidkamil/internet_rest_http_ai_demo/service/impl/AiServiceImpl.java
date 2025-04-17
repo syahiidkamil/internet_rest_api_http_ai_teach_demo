@@ -65,17 +65,51 @@ public class AiServiceImpl implements AiService {
                     // Extract text from Gemini API response
                     String responseText = "No response";
                     try {
-                        List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
-                        if (candidates != null && !candidates.isEmpty()) {
-                            Map<String, Object> candidate = candidates.get(0);
-                            List<Map<String, Object>> content = (List<Map<String, Object>>) candidate.get("content");
-                            if (content != null && !content.isEmpty()) {
-                                Map<String, Object> contentItem = content.get(0);
-                                List<Map<String, Object>> parts = (List<Map<String, Object>>) contentItem.get("parts");
-                                if (parts != null && !parts.isEmpty()) {
-                                    responseText = (String) parts.get(0).get("text");
+                        // More flexible parsing that can handle different response structures
+                        if (response.containsKey("candidates")) {
+                            Object candidatesObj = response.get("candidates");
+                            if (candidatesObj instanceof List) {
+                                List<?> candidates = (List<?>) candidatesObj;
+                                if (!candidates.isEmpty() && candidates.get(0) instanceof Map) {
+                                    Map<?, ?> candidate = (Map<?, ?>) candidates.get(0);
+                                    if (candidate.containsKey("content")) {
+                                        Object contentObj = candidate.get("content");
+                                        if (contentObj instanceof Map) {
+                                            // Handle case where content is a Map
+                                            Map<?, ?> contentMap = (Map<?, ?>) contentObj;
+                                            if (contentMap.containsKey("parts")) {
+                                                Object partsObj = contentMap.get("parts");
+                                                if (partsObj instanceof List && !((List<?>) partsObj).isEmpty()) {
+                                                    Object partObj = ((List<?>) partsObj).get(0);
+                                                    if (partObj instanceof Map && ((Map<?, ?>) partObj).containsKey("text")) {
+                                                        responseText = (String) ((Map<?, ?>) partObj).get("text");
+                                                    }
+                                                }
+                                            }
+                                        } else if (contentObj instanceof List && !((List<?>) contentObj).isEmpty()) {
+                                            // Handle case where content is a List
+                                            Object contentItem = ((List<?>) contentObj).get(0);
+                                            if (contentItem instanceof Map) {
+                                                Map<?, ?> contentMap = (Map<?, ?>) contentItem;
+                                                if (contentMap.containsKey("parts")) {
+                                                    Object partsObj = contentMap.get("parts");
+                                                    if (partsObj instanceof List && !((List<?>) partsObj).isEmpty()) {
+                                                        Object partObj = ((List<?>) partsObj).get(0);
+                                                        if (partObj instanceof Map && ((Map<?, ?>) partObj).containsKey("text")) {
+                                                            responseText = (String) ((Map<?, ?>) partObj).get("text");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                        }
+                        
+                        // Debugging output
+                        if ("No response".equals(responseText)) {
+                            System.out.println("Response structure: " + response);
                         }
                     } catch (Exception e) {
                         responseText = "Error parsing response: " + e.getMessage();

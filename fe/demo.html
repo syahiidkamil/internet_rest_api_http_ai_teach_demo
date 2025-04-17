@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API Demo</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Spring Boot REST API Demo</h1>
+        
+        <div id="token-status" class="logged-out">Not logged in</div>
+        
+        <div id="authSection" class="section auth-section">
+            <h2>Authentication</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <h3>Register</h3>
+                    <div class="endpoint-url">
+                        <span class="method post">POST</span> /api/auth/register
+                    </div>
+                    <form id="registerForm">
+                        <label for="registerUsername">Username:</label>
+                        <input type="text" id="registerUsername" required>
+                        
+                        <label for="registerPassword">Password:</label>
+                        <input type="password" id="registerPassword" required>
+                        
+                        <label for="registerName">Name:</label>
+                        <input type="text" id="registerName" required>
+                        
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" id="registerEmail" required>
+                        
+                        <button type="submit">Register</button>
+                    </form>
+                </div>
+                
+                <div class="form-group">
+                    <h3>Login</h3>
+                    <div class="endpoint-url">
+                        <span class="method post">POST</span> /api/auth/login
+                    </div>
+                    <form id="loginForm">
+                        <label for="loginUsername">Username:</label>
+                        <input type="text" id="loginUsername" required>
+                        
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" required>
+                        
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+            
+            <h3>Response:</h3>
+            <pre id="authResponse" class="response auth-response">Response will appear here...</pre>
+        </div>
+        
+        <div id="loggedInSection" class="hidden">
+            <button id="logoutButton">Logout</button>
+        </div>
+        
+        <div class="section products-section">
+            <h2>Products API</h2>
+            
+            <h3>Get All Products</h3>
+            <div class="endpoint-url">
+                <span class="method get">GET</span> /api/products
+            </div>
+            <button id="getAllProductsButton">Get All Products</button>
+            
+            <h3>Search Products</h3>
+            <div class="endpoint-url">
+                <span class="method get">GET</span> /api/products/search?name={searchTerm}
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" id="productSearchTerm" placeholder="Search term">
+                </div>
+                <div class="form-group">
+                    <button id="searchProductButton">Search</button>
+                </div>
+            </div>
+            
+            <h3>Create a New Product</h3>
+            <div class="endpoint-url">
+                <span class="method post">POST</span> /api/products
+            </div>
+            <form id="productForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Name:</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price:</label>
+                        <input type="number" id="productPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock">Stock:</label>
+                        <input type="number" id="productStock" required>
+                    </div>
+                </div>
+                
+                <label for="productDescription">Description:</label>
+                <textarea id="productDescription" rows="3"></textarea>
+                
+                <label for="productImageUrl">Image URL:</label>
+                <input type="url" id="productImageUrl">
+                
+                <button type="submit">Create Product</button>
+            </form>
+            
+            <h3>Response:</h3>
+            <pre id="productsResponse" class="response products-response">Response will appear here...</pre>
+        </div>
+        
+        <div class="section ai-section">
+            <h2>AI Integration</h2>
+            
+            <h3>Generate Content (Public)</h3>
+            <div class="endpoint-url">
+                <span class="method post">POST</span> /api/ai/generate
+            </div>
+            <form id="aiPromptForm">
+                <label for="aiPrompt">Prompt:</label>
+                <textarea id="aiPrompt" rows="3" required placeholder="Ask anything..."></textarea>
+                
+                <button type="submit">Generate</button>
+            </form>
+            
+            <h3>Response:</h3>
+            <pre id="aiResponse" class="response ai-response">Response will appear here...</pre>
+            
+            <h3>Generate Content (Secured)</h3>
+            <div class="endpoint-url">
+                <span class="method post">POST</span> /api/ai/generate-secure
+            </div>
+            <form id="secureAiPromptForm">
+                <label for="secureAiPrompt">Prompt (requires authentication):</label>
+                <textarea id="secureAiPrompt" rows="3" required placeholder="Ask anything (need to be logged in)..."></textarea>
+                
+                <button type="submit">Generate (Secure)</button>
+            </form>
+            
+            <h3>Response:</h3>
+            <pre id="secureAiResponse" class="response ai-response">Response will appear here...</pre>
+        </div>
+    </div>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
